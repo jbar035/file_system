@@ -4,7 +4,8 @@ package com.jake.scala.oop.files
   * Created by Jake Barnes on 26/11/2018
   */
 class Directory(override val parentPath: String, override val name: String, val contents:List[DirEntry]) extends DirEntry(parentPath, name) {
-//10:55
+
+  def hasEntry(name: String): Boolean = ???
 }
 
 object Directory {
