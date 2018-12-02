@@ -1,6 +1,6 @@
 package com.jake.scala.oop.commands
 
-import com.jake.scala.oop.files.Directory
+import com.jake.scala.oop.files.{DirEntry, Directory}
 import com.jake.scala.oop.filesystem.State
 
 /**
@@ -26,7 +26,25 @@ class Mkdir(name: String) extends Command {
   }
 
   def doMkdir(state: State, str: String): State = {
+    def updateStructure(currentDirectory: Directory, path: List[String], newEntry: DirEntry): Directory = {
+      if (path.isEmpty) currentDirectory.addEntry(newEntry)
+    }
 
+    val wd = state.wd
+
+    // 1. all the directories in the full path
+    val allDirsInPath = wd.getAllFoldersInPath
+
+    // 2. create new directory in the wd
+    val newDir = Directory.empty(wd.path, name)
+
+    // 3. update the whole directory structure starting from the root
+    // (the directory structure is IMMUTABLE)
+    val newRoot = updateStructure(state.root, allDirsInPath, newDir)
+
+    // 4. find new working directory INSTANCE given the wd's full path, in the NEW directory structure
+    val newWd = newRoot.findDescendant(allDirsInPath)
+    State(newRoot, newWd)
   }
 
 }
